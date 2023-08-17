@@ -20,10 +20,10 @@ rules:
   - apiGroups: ["authentication.k8s.io"]
     resources: ["tokenreviews"]
     verbs: ["create"]
-{{- if not .Values.global.rbac.namespaced }}
   - apiGroups: ["dapr.io"]
     resources: ["configurations"]
     verbs: ["list", "get", "watch"]
+{{- if not .Values.global.rbac.namespaced }}
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["list", "get", "watch"]
