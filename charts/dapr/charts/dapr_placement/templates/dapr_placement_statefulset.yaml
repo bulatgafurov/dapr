@@ -38,6 +38,13 @@ spec:
         prometheus.io/path: "/"
 {{- end }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      hostNetwork: false
+      hostPID: false
       containers:
       - name: dapr-placement-server
         livenessProbe:
@@ -150,11 +157,9 @@ spec:
         - "--sentry-address={{ if .Values.global.mtls.sentryAddress }}{{ .Values.global.mtls.sentryAddress }}{{ else }}dapr-sentry.{{ .Release.Namespace }}.svc:80{{ end }}"
 {{- if eq .Values.global.daprControlPlaneOs "linux" }}
         securityContext:
-{{- if eq .Values.cluster.forceInMemoryLog true }}
-          runAsNonRoot: {{ .Values.runAsNonRoot }}
-{{- else }}
-          runAsUser: 0
-{{- end }}
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          privileged: false
   {{- if eq .Values.debug.enabled true }}
           capabilities:
             add: ["SYS_PTRACE"]
