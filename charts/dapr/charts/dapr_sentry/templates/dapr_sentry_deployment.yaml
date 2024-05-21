@@ -55,6 +55,13 @@ spec:
         prometheus.io/path: "/"
 {{- end }}
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      hostNetwork: false
+      hostPID: false
       containers:
       - name: dapr-sentry
         livenessProbe:
@@ -88,10 +95,16 @@ spec:
 {{- if eq .Values.global.daprControlPlaneOs "linux" }}
         securityContext:
           runAsNonRoot: {{ .Values.runAsNonRoot }}
-  {{- if eq .Values.debug.enabled true }}
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          privileged: false
           capabilities:
+  {{- if eq .Values.debug.enabled true }}
             add:
               - SYS_PTRACE
+  {{- else }}
+            remove:
+              - ALL
   {{- end }}
 {{- end }}
         env:
