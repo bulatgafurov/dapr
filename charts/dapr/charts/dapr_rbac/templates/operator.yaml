@@ -7,7 +7,6 @@ metadata:
     {{ $key }}: {{ tpl $value $ }}
     {{- end }}
 ---
-{{- if not .Values.global.rbac.namespaced }}
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -20,6 +19,7 @@ rules:
   - apiGroups: ["apiextensions.k8s.io"]
     resources: ["customresourcedefinitions"]
     verbs: ["get", "patch"]
+{{- if not .Values.global.rbac.namespaced }}
   - apiGroups: ["apps"]
     resources: ["deployments", "deployments/finalizers"]
     verbs: ["get", "list", "watch"]
@@ -61,7 +61,6 @@ rules:
     verbs: ["update"]
 {{- end }}
 ---
-{{- if not .Values.global.rbac.namespaced }}
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -78,7 +77,6 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: dapr-operator-admin
-{{- end }}
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
@@ -106,9 +104,6 @@ rules:
     resources: ["configmaps", "events"]
     verbs: ["create"]
 {{- if eq .Values.global.rbac.namespaced true }}
-  - apiGroups: ["apiextensions.k8s.io"]
-    resources: ["customresourcedefinitions"]
-    verbs: ["get", "patch"]
   - apiGroups: ["apps"]
     resources: ["deployments", "deployments/finalizers"]
     verbs: ["get", "list", "watch"]
@@ -123,7 +118,7 @@ rules:
     verbs: ["update"]
   - apiGroups: [""]
     resources: ["pods"]
-    verbs: ["get", "list", "delete"]
+    verbs: ["get", "list", "delete", "watch", "patch"]
   - apiGroups: [""]
     resources: ["services","services/finalizers"]
     verbs: ["get", "list", "watch", "update", "create"]
