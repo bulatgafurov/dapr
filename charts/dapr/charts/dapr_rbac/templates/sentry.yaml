@@ -67,7 +67,7 @@ rules:
 {{- if eq .Values.global.rbac.namespaced true }}
   - apiGroups: ["dapr.io"]
     resources: ["configurations"]
-    verbs: ["list"]
+    verbs: ["list", "get"]
 {{- end }}
 ---
 kind: RoleBinding
