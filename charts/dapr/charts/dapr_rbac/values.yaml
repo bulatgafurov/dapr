@@ -2,3 +2,4 @@ secretReader:
   enabled: true
   namespace: default
 component: rbac
+createClusterScopedObjects: true

@@ -7,6 +7,7 @@ metadata:
     {{ $key }}: {{ tpl $value $ }}
     {{- end }}
 ---
+{{ if .Values.createClusterScopedObjects }}
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -37,6 +38,7 @@ roleRef:
   kind: ClusterRole
   name: dapr-sentry
 ---
+{{- end }}
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
