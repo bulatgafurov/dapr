@@ -60,8 +60,6 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         fsGroup: 1000
-      hostNetwork: false
-      hostPID: false
       containers:
       - name: dapr-sentry
         livenessProbe:
@@ -103,7 +101,7 @@ spec:
             add:
               - SYS_PTRACE
   {{- else }}
-            remove:
+            drop:
               - ALL
   {{- end }}
 {{- end }}
